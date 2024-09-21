@@ -2,6 +2,8 @@ package aplication;
 
 
 import db.DB;
+import db.DbIntegrityException;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -13,17 +15,17 @@ public class testw {
 
         try {
             con = DB.getCon();
-            st = con.prepareStatement("UPDATE seller SET BaseSalary = ?- BaseSalary WHERE DepartmentId = ?");
+            st = con.prepareStatement("DELETE FROM department WHERE Id = ?");
 
-
-
-            st.setDouble(1,20);
-            st.setInt(2,2);
+            st.setInt(1,2);
 
             int mudados=  st.executeUpdate();
             System.out.println("Mudanças: "+mudados);
         }catch (SQLException e){
-            e.printStackTrace();
+            throw new DbIntegrityException(e.getMessage());
+        }finally {
+            DB.fecharinserindo(st);
+            DB.fecharConexao();
         }
     }
 }
